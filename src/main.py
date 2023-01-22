@@ -66,8 +66,13 @@ def resetTable():
 
 
 def deleteSelectedRow():
-    index=table.getSelectedRow()
-    table.model.df.drop(index,inplace=True)
+    selectedTableIndex = table.getSelectedRow()
+    print(table.getSelectedRowData()['Codigo'])
+    selected = table.getSelectedRowData()['Codigo'][selectedTableIndex]
+    dfIndex= table.model.df.query('Codigo =='+str(selected)).index
+    table.model.df.drop(dfIndex,inplace=True)
+    if (len(table.model.df)==0):
+        clearTable()
     table.redraw()
 
 def clearTable():
