@@ -6,6 +6,9 @@ from tkinter import filedialog
 
 dataFolder="data/"
 
+files = [fn for fn in listdir(dataFolder)
+        if any(fn.endswith(ext) for ext in ["csv"])]
+
 
 def search():
     Data = pd.read_csv(dataFolder+dropdown.get())
@@ -21,23 +24,21 @@ def search():
 
 def submit(event):
     search()
-    
-def renderDropdown():
-    files = [fn for fn in listdir(dataFolder)
-            if any(fn.endswith(ext) for ext in ["csv"])]
-    
-    input = tk.OptionMenu( window,dropdown, *files,)
-    dropdown.set("fedex.csv")
-    input.pack()
-    input.place(x= 200, y=8)
 
-def renderCodeInput():
-    label = tk.Label(text="Código de barras")
-    entry  = tk.Entry(textvariable=barCode)
-    label.pack()
-    entry.pack()
-    label.place(x=300,y=8)
+
+def renderInputs(Frame:tk.Frame):
+    source = tk.OptionMenu( Frame,dropdown, *files,)
+    label = tk.Label(Frame, text="Código de barras")
+    entry  = tk.Entry(Frame, textvariable=barCode)
+    label.pack(side=tk.LEFT,padx=5,pady=10)
+    entry.pack(side=tk.LEFT, padx=5, pady=10)
     entry.bind('<Return>', submit)
+    dropdown.set("fedex.csv")
+    source.pack(side=tk.RIGHT,padx=5,pady=10)
+
+def renderButtons(Frame:tk.Frame):
+    return
+
 
 def deleteSelectedRow():
     table.deleteRow()
@@ -65,8 +66,10 @@ dropdown= tk.StringVar()
 window.geometry('1200x900+10+10')
 window.title('Control de guias')
 DataSource = "fedex.csv"
-renderCodeInput()
-renderDropdown()
+frameInputs = tk.Frame(window, height = 50, background='red')
+renderInputs(frameInputs)
+frameInputs.pack(fill='x')
+tk.Frame(window, height = 15, background='black').pack(fill=tk.BOTH)
 df = pd.DataFrame({
     'Codigo':[''],
     'Nombre':[''],
@@ -75,8 +78,7 @@ df = pd.DataFrame({
 })
 
 frameTable = tk.Frame(window, height=100)
-frameTable.pack(fill='x',expand=False)
-
+frameTable.pack(side=tk.LEFT,fill='both',expand=True,)
 table = Table(frameTable, dataframe = df)
 table.show()
 
@@ -86,6 +88,8 @@ exportExcelBtn =tk.Button(text="Exportar a Excel",command=exportToExcel )
 deleteRowBtn.pack()
 clearBtn.pack()
 exportExcelBtn.pack()
+frameButtons = tk.Frame(window,width=200,background='green')
+# renderButtons(frameButtons)
+frameButtons.pack(fill='y', side=tk.RIGHT)
 window.mainloop()
-
-    
+   
