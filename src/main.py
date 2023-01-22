@@ -41,8 +41,9 @@ def renderButtons(Frame:tk.Frame):
 
 
 def deleteSelectedRow():
-    table.deleteRow()
-    
+    index=table.getSelectedRow()
+    table.model.df.drop(index,inplace=True)
+    table.redraw()
 
 def clearTable():
     df.drop(df.index,inplace=True)
