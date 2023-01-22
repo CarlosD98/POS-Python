@@ -17,12 +17,13 @@ def search():
     try:
         res = Data.query(query)
         if not res.empty:
-            if df.loc[0].Codigo == '':
-                df.loc[0]= res.iloc[0]
+            if table.model.df.loc[0].Codigo == '':
+                table.model.df.loc[0]= res.iloc[0]
             else:
-                df.loc[len(df)]= res.iloc[0]
-            table.redraw()
+                table.model.df.loc[len(table.model.df)]= res.iloc[0]
+
             table.autoResizeColumns()
+            table.redraw()
         else:
             messagebox.showerror(message= "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
             title="No encontrado")
@@ -79,7 +80,7 @@ def exportToExcel():
     resultExcelFile = pd.ExcelWriter(filePath.name+'.xlsx')
 
     # converting the csv file to an excel file
-    df.to_excel(resultExcelFile, index=False)
+    table.model.df.to_excel(resultExcelFile, index=False)
 
     # saving the excel file
     resultExcelFile.save()
@@ -94,10 +95,9 @@ frameInputs = tk.Frame(window, height = 50, background='red')
 renderInputs(frameInputs)
 frameInputs.pack(fill='x')
 tk.Frame(window, height = 15, background='black').pack(fill=tk.BOTH)
-df = resetTable()
 frameTable = tk.Frame(window, height=100)
 frameTable.pack(side=tk.LEFT,fill='both',expand=True,)
-table = Table(frameTable, dataframe = df)
+table = Table(frameTable, dataframe = resetTable())
 table.show()
 frameButtons = tk.Frame(window,width=200,background='green')
 renderButtons(frameButtons)
