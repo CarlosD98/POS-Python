@@ -6,12 +6,16 @@ from os.path import isfile, join
 
 dataFolder="data/"
 
+def submit(event):
+    search()
+
 def renderCodeInput():
 
     label = tk.Label(text="Código de barras")
-    entry  = tk.Entry()
+    entry  = tk.Entry(textvariable=barCode)
     label.pack()
     entry.pack()
+    entry.bind('<Return>', submit)
     label.place(x=600, y=3)
 
 def renderDropdown(window:tk.Tk):    
@@ -27,9 +31,8 @@ def renderDropdown(window:tk.Tk):
     drop.place(x= 450, y=2)
 
 
-
-
 window = tk.Tk()
+barCode = tk.StringVar()
 window.geometry('1600x900+10+10')
 window.title('Control de guias')
 DataSource = "fedex.csv"
@@ -49,8 +52,9 @@ frameTable.pack(fill='both',expand=True)
 
 table = Table(frameTable, dataframe = df)
 table.show()
+
 def search():
-    query = "Codigo == " + '392975632633'
+    query = "Codigo == " + barCode.get()
     res = Data.query(query)
     if not res.empty:
         if df.loc[0].Codigo == '':
@@ -58,6 +62,7 @@ def search():
         else:
             df.loc[len(df)]= res.iloc[0]
         table.redraw()
+
 def action():
     df.loc[len(df)]=df.loc[0]
     table.redraw()
@@ -67,14 +72,6 @@ btn =tk.Button(text="add", command=search)
 btn.pack()
 window.mainloop()
 
-def updateTable():
-    df.add()
-    table.redraw()
-
 def reloadData():
     Data = pd.read_csv(dataFolder+DataSource)
-
-
-
-
     
