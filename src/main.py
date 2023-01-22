@@ -6,8 +6,22 @@ from os.path import isfile, join
 
 dataFolder="data/"
 
+
+def search():
+    Data = pd.read_csv(dataFolder+dropdown.get())
+    query = "Codigo == " + barCode.get()
+    res = Data.query(query)
+    if not res.empty:
+        if df.loc[0].Codigo == '':
+            df.loc[0]= res.iloc[0]
+        else:
+            df.loc[len(df)]= res.iloc[0]
+        table.redraw()
+        table.autoResizeColumns()
+
 def submit(event):
     search()
+    
 def renderDropdown():
     files = [fn for fn in listdir(dataFolder)
             if any(fn.endswith(ext) for ext in ["csv"])]
@@ -18,14 +32,12 @@ def renderDropdown():
     input.place(x= 200, y=8)
 
 def renderCodeInput():
-
     label = tk.Label(text="Código de barras")
     entry  = tk.Entry(textvariable=barCode)
     label.pack()
     entry.pack()
     label.place(x=300,y=8)
     entry.bind('<Return>', submit)
-
 
 window = tk.Tk()
 barCode = tk.StringVar()
@@ -47,18 +59,6 @@ frameTable.pack(fill='x',expand=False)
 
 table = Table(frameTable, dataframe = df)
 table.show()
-
-def search():
-    Data = pd.read_csv(dataFolder+dropdown.get())
-    query = "Codigo == " + barCode.get()
-    res = Data.query(query)
-    if not res.empty:
-        if df.loc[0].Codigo == '':
-            df.loc[0]= res.iloc[0]
-        else:
-            df.loc[len(df)]= res.iloc[0]
-        table.redraw()
-        table.autoResizeColumns()
 
 window.mainloop()
 
