@@ -8,6 +8,14 @@ dataFolder="data/"
 
 def submit(event):
     search()
+def renderDropdown():
+    files = [fn for fn in listdir(dataFolder)
+            if any(fn.endswith(ext) for ext in ["csv"])]
+    
+    input = tk.OptionMenu( window,dropdown, *files,)
+    dropdown.set("fedex.csv")
+    input.pack()
+    input.place(x= 200, y=8)
 
 def renderCodeInput():
 
@@ -15,28 +23,18 @@ def renderCodeInput():
     entry  = tk.Entry(textvariable=barCode)
     label.pack()
     entry.pack()
+    label.place(x=300,y=8)
     entry.bind('<Return>', submit)
-    label.place(x=600, y=3)
 
 
 window = tk.Tk()
 barCode = tk.StringVar()
-window.geometry('1600x900+10+10')
+dropdown= tk.StringVar()
+window.geometry('1200x900+10+10')
 window.title('Control de guias')
 DataSource = "fedex.csv"
 renderCodeInput()
-files = [fn for fn in listdir(dataFolder)
-            if any(fn.endswith(ext) for ext in ["csv"])]
-    
-clicked = tk.StringVar()
-clicked.set("fedex.csv")
-
-drop = tk.OptionMenu( window,clicked, *files,)
-drop.pack()
-drop.place(x= 450, y=2)
-
-Data = pd.read_csv("data/fedex.csv")
-Data.values
+renderDropdown()
 df = pd.DataFrame({
     'Codigo':[''],
     'Nombre':[''],
@@ -45,13 +43,13 @@ df = pd.DataFrame({
 })
 
 frameTable = tk.Frame(window, height=100)
-frameTable.pack(fill='both',expand=True)
+frameTable.pack(fill='x',expand=False)
 
 table = Table(frameTable, dataframe = df)
 table.show()
 
 def search():
-    Data = pd.read_csv(dataFolder+clicked.get())
+    Data = pd.read_csv(dataFolder+dropdown.get())
     query = "Codigo == " + barCode.get()
     res = Data.query(query)
     if not res.empty:
@@ -60,14 +58,8 @@ def search():
         else:
             df.loc[len(df)]= res.iloc[0]
         table.redraw()
+        table.autoResizeColumns()
 
-def action():
-    df.loc[len(df)]=df.loc[0]
-    table.redraw()
-    print(df.loc[0])
-
-btn =tk.Button(text="add", command=search)
-btn.pack()
 window.mainloop()
 
     
