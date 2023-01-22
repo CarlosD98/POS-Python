@@ -66,8 +66,9 @@ def resetTable():
 
 
 def deleteSelectedRow():
-    table.deleteRow()
-    
+    index=table.getSelectedRow()
+    table.model.df.drop(index,inplace=True)
+    table.redraw()
 
 def clearTable():
     table.model.df = resetTable()
