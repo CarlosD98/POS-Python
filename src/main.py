@@ -10,7 +10,6 @@ dataFolder="data/"
 files = [fn for fn in listdir(dataFolder)
         if any(fn.endswith(ext) for ext in ["csv"])]
 
-
 def search():
     Data = pd.read_csv(dataFolder+dropdown.get())
     query = "Codigo == " + barCode.get()
@@ -37,7 +36,6 @@ def submit(event):
         return
     search()
 
-
 def renderInputs(Frame:tk.Frame):
     source = tk.OptionMenu( Frame,dropdown, *files,)
     label = tk.Label(Frame, text="Código de barras")
@@ -63,8 +61,7 @@ def resetTable():
     'Nombre':[''],
     'Direccion':[''],
     'Celular':['']})
-
-
+ 
 def deleteSelectedRow():
     index=table.getSelectedRow()
     table.model.df.drop(index,inplace=True)
@@ -92,17 +89,17 @@ dropdown= tk.StringVar()
 window.geometry('1200x900+10+10')
 window.title('Control de guias')
 DataSource = "fedex.csv"
-frameInputs = tk.Frame(window, height = 50, background='red')
+frameInputs = tk.Frame(window, height = 50, background='AliceBlue' )
 renderInputs(frameInputs)
 frameInputs.pack(fill='x')
 tk.Frame(window, height = 15, background='black').pack(fill=tk.BOTH)
 frameTable = tk.Frame(window, height=100)
 frameTable.pack(side=tk.LEFT,fill='both',expand=True,)
 table = Table(frameTable, dataframe = resetTable())
+table.editable = False
 table.autoResizeColumns()
 table.show()
-frameButtons = tk.Frame(window,width=200,background='green')
+frameButtons = tk.Frame(window,width=200,background='AliceBlue')
 renderButtons(frameButtons)
 frameButtons.pack(fill='y', side=tk.RIGHT)
 window.mainloop()
-   
