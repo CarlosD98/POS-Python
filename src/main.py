@@ -2,7 +2,7 @@ import tkinter as tk
 import pandas as pd
 from pandastable import Table
 from os import listdir
-from os.path import isfile, join
+from tkinter import filedialog
 
 dataFolder="data/"
 
@@ -39,6 +39,26 @@ def renderCodeInput():
     label.place(x=300,y=8)
     entry.bind('<Return>', submit)
 
+def deleteSelectedRow():
+    table.deleteRow()
+    
+
+def clearTable():
+    df.drop(df.index,inplace=True)
+    table.redraw()
+    
+
+def exportToExcel():
+    filePath = filedialog.asksaveasfile()
+    # creating an output excel file
+    resultExcelFile = pd.ExcelWriter(filePath.name+'.xlsx')
+
+    # converting the csv file to an excel file
+    df.to_excel(resultExcelFile, index=False)
+
+    # saving the excel file
+    resultExcelFile.save()
+
 window = tk.Tk()
 barCode = tk.StringVar()
 dropdown= tk.StringVar()
@@ -60,6 +80,12 @@ frameTable.pack(fill='x',expand=False)
 table = Table(frameTable, dataframe = df)
 table.show()
 
+deleteRowBtn = tk.Button(text="Eliminar fila seleccionada", command=deleteSelectedRow)
+clearBtn = tk.Button(text="Limpiar registros", command=clearTable)
+exportExcelBtn =tk.Button(text="Exportar a Excel",command=exportToExcel )
+deleteRowBtn.pack()
+clearBtn.pack()
+exportExcelBtn.pack()
 window.mainloop()
 
     
