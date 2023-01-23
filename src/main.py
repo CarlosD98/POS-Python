@@ -29,17 +29,21 @@ def search():
             table.autoResizeColumns()
             table.redraw()
         else:
-            messagebox.showerror(message= "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
+            messagebox.showerror(message= 
+            "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
             title="No encontrado")
     except pd.errors.UndefinedVariableError:
-        messagebox.showerror(message= "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
+        messagebox.showerror(message= 
+        "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
         title="No encontrado")
     barCode.set('')
 
 def submit(event):
+    event
     if (barCode.get() == '' or barCode.get() == None) :
-        return
+        return 'break'
     search()
+    return 'break'
 
 def renderInputs(Frame:tk.Frame):
     source = tk.OptionMenu( Frame,dropdown, *files,)
