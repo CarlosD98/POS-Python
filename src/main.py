@@ -10,9 +10,14 @@ dataFolder="data/"
 files = [fn for fn in listdir(dataFolder)
         if any(fn.endswith(ext) for ext in ["csv"])]
 
+def processBarCode():
+    if dropdown.get() == 'fedex.csv':
+        return barCode.get()[-12:]
+    return barCode.get()
+
 def search():
     Data = pd.read_csv(dataFolder+dropdown.get())
-    query = "Codigo == " + barCode.get()
+    query = "Codigo == " + processBarCode()
     try:
         res = Data.query(query)
         if not res.empty:
@@ -101,8 +106,7 @@ tk.Frame(window, height = 15, background='black').pack(fill=tk.BOTH)
 frameTable = tk.Frame(window, height=100)
 frameTable.pack(side=tk.LEFT,fill='both',expand=True,)
 table = Table(frameTable, dataframe = resetTable())
-table.editable = False
-table.autoResizeColumns()
+table.adjustColumnWidths(limit=50)
 table.show()
 frameButtons = tk.Frame(window,width=200,background='AliceBlue')
 renderButtons(frameButtons)
