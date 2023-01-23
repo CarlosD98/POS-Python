@@ -21,11 +21,7 @@ def search():
     try:
         res = Data.query(query)
         if not res.empty:
-            if table.model.df.loc[0].Codigo == '':
-                table.model.df.loc[0]= res.iloc[0]
-            else:
-                table.model.df.loc[len(table.model.df)]= res.iloc[0]
-
+            table.model.df =pd.concat([table.model.df,res],ignore_index=True)
             table.autoResizeColumns()
             table.redraw()
         else:
