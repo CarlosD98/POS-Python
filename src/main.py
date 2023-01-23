@@ -21,26 +21,26 @@ def search():
     try:
         res = Data.query(query)
         if not res.empty:
-            if len(table.model.df):
-                table.model.df =pd.concat([table.model.df,res],ignore_index=True)
-                table.model.df.iloc[1:]
-            else:
-               table.model.df = pd.concat([table.model.df,res],ignore_index=True)
-
+            table.model.df = pd.concat([table.model.df,res],ignore_index=True)
+            isEmptyRow = table.model.df.iloc[0].Codigo == ''
+            if(isEmptyRow):
+                table.model.df = table.model.df.iloc[1:]
             table.autoResizeColumns()
             table.redraw()
         else:
-            messagebox.showerror(message= "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
+            messagebox.showerror(message= "No encontre "+barCode.get()+" dentro de "+dropdown.get()+" intente en otro csv",
             title="No encontrado")
     except pd.errors.UndefinedVariableError:
-        messagebox.showerror(message= "No encontre "+barCode.get()+" denro de "+dropdown.get()+" intente en otro csv",
+        messagebox.showerror(message= "No encontre "+barCode.get()+" dentro de "+dropdown.get()+" intente en otro csv",
         title="No encontrado")
     barCode.set('')
+    return "break"
 
 def submit(event):
     if (barCode.get() == '' or barCode.get() == None) :
-        return
+        return "break"
     search()
+    return "break"
 
 def renderInputs(Frame:tk.Frame):
     source = tk.OptionMenu( Frame,dropdown, *files,)
