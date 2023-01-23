@@ -64,8 +64,7 @@ def resetTable():
  
 def deleteSelectedRow():
     selectedTableIndex = table.getSelectedRow()
-    print(table.getSelectedRowData()['Codigo'])
-    selected = table.getSelectedRowData()['Codigo'][selectedTableIndex]
+    selected=table.model.getRecordAtRow(selectedTableIndex).Codigo
     dfIndex= table.model.df.query('Codigo =='+str(selected)).index
     table.model.df.drop(dfIndex,inplace=True)
     if (len(table.model.df)==0):
@@ -78,15 +77,17 @@ def clearTable():
     
 
 def exportToExcel():
-    filePath = filedialog.asksaveasfile()
+    filePath = filedialog.asksaveasfilename()
+    print(filePath)
     # creating an output excel file
-    resultExcelFile = pd.ExcelWriter(filePath.name+'.xlsx')
+    resultExcelFile = pd.ExcelWriter(filePath+'.xlsx')
 
     # converting the csv file to an excel file
     table.model.df.to_excel(resultExcelFile, index=False)
 
     # saving the excel file
     resultExcelFile.save()
+    messagebox.showinfo('Archivo generado', 'Se ha generado el documento de Excel correctamente.')
 
 window = tk.Tk()
 barCode = tk.StringVar()
